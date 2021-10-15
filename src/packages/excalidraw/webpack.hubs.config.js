@@ -11,10 +11,12 @@ module.exports = {
   entry: {
     "excalidraw.hubs.min": "../../excalidraw-app/hubs.tsx",
   },
+  experiments: {
+    outputModule: true,
+  },
   output: {
     path: path.resolve(__dirname, "dist"),
-    library: "Excalidraw",
-    libraryTarget: "umd",
+    libraryTarget: "module",
     filename: "[name].js",
     chunkFilename: "excalidraw-assets/[name]-[contenthash].js",
     publicPath: "",
