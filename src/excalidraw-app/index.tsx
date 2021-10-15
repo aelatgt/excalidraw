@@ -71,8 +71,14 @@ const onBlur = () => {
   saveDebounced.flush();
 };
 
+export type RoomLinkData = {
+  roomId: string;
+  roomKey: string;
+};
+
 const initializeScene = async (opts: {
   collabAPI: CollabAPI;
+  roomLinkData?: RoomLinkData;
 }): Promise<ImportedDataState | null> => {
   const searchParams = new URLSearchParams(window.location.search);
   const id = searchParams.get("id");
@@ -87,7 +93,15 @@ const initializeScene = async (opts: {
     scrollToContent?: boolean;
   } = await loadScene(null, null, localDataState);
 
-  let roomLinkData = getCollaborationLinkData(window.location.href);
+  // Ignore room data parsed from URL
+  // Note the format is https://excalidraw.com/#room=roomId,roomKey
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const ignoreRoomLinkData = getCollaborationLinkData(window.location.href);
+
+  // Instead use the manually provided room info
+  let roomLinkData = opts.roomLinkData;
+
   const isExternalScene = !!(id || jsonBackendMatch || roomLinkData);
   if (isExternalScene) {
     if (
@@ -173,7 +187,11 @@ const PlusLinkJSX = (
   </p>
 );
 
-const ExcalidrawWrapper = () => {
+type ExcalidrawWrapperProps = {
+  roomLinkData?: RoomLinkData;
+};
+
+const ExcalidrawWrapper = ({ roomLinkData }: ExcalidrawWrapperProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   const currentLangCode = languageDetector.detect() || defaultLang.code;
   const [langCode, setLangCode] = useState(currentLangCode);
@@ -207,7 +225,7 @@ const ExcalidrawWrapper = () => {
       return;
     }
 
-    initializeScene({ collabAPI }).then((scene) => {
+    initializeScene({ collabAPI, roomLinkData }).then((scene) => {
       if (scene) {
         try {
           scene.libraryItems =
@@ -235,7 +253,7 @@ const ExcalidrawWrapper = () => {
         window.history.replaceState({}, "", event.oldURL);
         excalidrawAPI.importLibrary(libraryUrl, hash.get("token"));
       } else {
-        initializeScene({ collabAPI }).then((scene) => {
+        initializeScene({ collabAPI, roomLinkData }).then((scene) => {
           if (scene) {
             excalidrawAPI.updateScene({
               ...scene,
@@ -259,7 +277,7 @@ const ExcalidrawWrapper = () => {
       window.removeEventListener(EVENT.BLUR, onBlur, false);
       clearTimeout(titleTimeout);
     };
-  }, [collabAPI, excalidrawAPI]);
+  }, [collabAPI, excalidrawAPI, roomLinkData]);
 
   useEffect(() => {
     languageDetector.cacheUserLanguage(langCode);
@@ -457,11 +475,15 @@ const ExcalidrawWrapper = () => {
   );
 };
 
-const ExcalidrawApp = () => {
+type ExcalidrawAppProps = {
+  roomLinkData?: RoomLinkData;
+};
+
+const ExcalidrawApp = ({ roomLinkData }: ExcalidrawAppProps) => {
   return (
     <TopErrorBoundary>
       <CollabContextConsumer>
-        <ExcalidrawWrapper />
+        <ExcalidrawWrapper roomLinkData={roomLinkData} />
       </CollabContextConsumer>
     </TopErrorBoundary>
   );
