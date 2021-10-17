@@ -238,7 +238,11 @@ const ExcalidrawWrapper = ({ roomLinkData }: ExcalidrawWrapperProps) => {
           console.error(e);
         }
       }
-      initialStatePromiseRef.current.promise.resolve(scene);
+      initialStatePromiseRef.current.promise.resolve({
+        ...scene,
+        appState: { ...scene?.appState, scrollX: 0, scrollY: 0 },
+        scrollToContent: false,
+      });
     });
 
     const onHashChange = (event: HashChangeEvent) => {
