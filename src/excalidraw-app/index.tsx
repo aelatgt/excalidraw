@@ -395,7 +395,11 @@ const ExcalidrawWrapper = ({ link }: ExcalidrawWrapperProps) => {
 
     initializeScene({ collabAPI, link }).then((data) => {
       loadImages(data, /* isInitialLoad */ true);
-      initialStatePromiseRef.current.promise.resolve(data.scene);
+      initialStatePromiseRef.current.promise.resolve({
+        ...data.scene,
+        appState: { ...data.scene?.appState, scrollX: 0, scrollY: 0 },
+        scrollToContent: false,
+      });
     });
 
     const onHashChange = (event: HashChangeEvent) => {
