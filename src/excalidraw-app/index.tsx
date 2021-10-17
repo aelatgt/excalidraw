@@ -732,7 +732,7 @@ const ExcalidrawWrapper = ({ link }: ExcalidrawWrapperProps) => {
         langCode={langCode}
         renderCustomStats={renderCustomStats}
         detectScroll={false}
-        handleKeyboardGlobally={true}
+        handleKeyboardGlobally={false}
         onLibraryChange={onLibraryChange}
         autoFocus={true}
       />
