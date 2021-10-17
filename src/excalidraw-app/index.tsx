@@ -460,7 +460,7 @@ const ExcalidrawWrapper = ({ roomLinkData }: ExcalidrawWrapperProps) => {
         langCode={langCode}
         renderCustomStats={renderCustomStats}
         detectScroll={false}
-        handleKeyboardGlobally={true}
+        handleKeyboardGlobally={false}
         onLibraryChange={onLibraryChange}
         autoFocus={true}
       />
