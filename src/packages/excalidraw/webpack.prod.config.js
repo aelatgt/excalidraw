@@ -15,10 +15,22 @@ module.exports = {
     : {
         "excalidraw.production.min": "./entry.js",
       },
+
+  experiments: process.env.HUBS
+    ? {
+        outputModule: true,
+      }
+    : undefined,
   output: {
     path: path.resolve(__dirname, "dist"),
-    library: "Excalidraw",
-    libraryTarget: "umd",
+    library: process.env.HUBS
+      ? {
+          type: "module",
+        }
+      : "Excalidraw",
+    libraryTarget: process.env.HUBS ? undefined : "umd",
+
+    environment: process.env.HUBS ? { module: true } : undefined,
     filename: "[name].js",
     chunkFilename: "excalidraw-assets/[name]-[contenthash].js",
     assetModuleFilename: "excalidraw-assets/[name][ext]",
@@ -99,6 +111,13 @@ module.exports = {
     },
   },
   plugins: [
+    ...(process.env.HUBS
+      ? [
+          new webpack.optimize.LimitChunkCountPlugin({
+            maxChunks: 1,
+          }),
+        ]
+      : []),
     ...(process.env.ANALYZER === "true" ? [new BundleAnalyzerPlugin()] : []),
     new webpack.DefinePlugin({
       "process.env": parseEnvVariables(
@@ -106,18 +125,20 @@ module.exports = {
       ),
     }),
   ],
-  externals: {
-    react: {
-      root: "React",
-      commonjs2: "react",
-      commonjs: "react",
-      amd: "react",
-    },
-    "react-dom": {
-      root: "ReactDOM",
-      commonjs2: "react-dom",
-      commonjs: "react-dom",
-      amd: "react-dom",
-    },
-  },
+  externals: process.env.HUBS
+    ? undefined
+    : {
+        react: {
+          root: "React",
+          commonjs2: "react",
+          commonjs: "react",
+          amd: "react",
+        },
+        "react-dom": {
+          root: "ReactDOM",
+          commonjs2: "react-dom",
+          commonjs: "react-dom",
+          amd: "react-dom",
+        },
+      },
 };
