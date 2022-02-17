@@ -166,6 +166,7 @@ const onBlur = () => {
 
 const initializeScene = async (opts: {
   collabAPI: CollabAPI;
+  link?: string;
 }): Promise<
   { scene: ImportedDataState | null } & (
     | { isExternalScene: true; id: string; key: string }
@@ -185,7 +186,9 @@ const initializeScene = async (opts: {
     scrollToContent?: boolean;
   } = await loadScene(null, null, localDataState);
 
-  let roomLinkData = getCollaborationLinkData(window.location.href);
+  let roomLinkData = getCollaborationLinkData(
+    opts.link ?? window.location.href,
+  );
   const isExternalScene = !!(id || jsonBackendMatch || roomLinkData);
   if (isExternalScene) {
     if (
@@ -283,7 +286,11 @@ const PlusLinkJSX = (
   </p>
 );
 
-const ExcalidrawWrapper = () => {
+type ExcalidrawWrapperProps = {
+  link?: string;
+};
+
+const ExcalidrawWrapper = ({ link }: ExcalidrawWrapperProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   let currentLangCode = languageDetector.detect() || defaultLang.code;
   if (Array.isArray(currentLangCode)) {
@@ -386,7 +393,7 @@ const ExcalidrawWrapper = () => {
       data.scene.libraryItems = getLibraryItemsFromStorage();
     };
 
-    initializeScene({ collabAPI }).then((data) => {
+    initializeScene({ collabAPI, link }).then((data) => {
       loadImages(data, /* isInitialLoad */ true);
       initialStatePromiseRef.current.promise.resolve(data.scene);
     });
@@ -403,7 +410,7 @@ const ExcalidrawWrapper = () => {
         window.history.replaceState({}, "", event.oldURL);
         excalidrawAPI.importLibrary(libraryUrl, hash.get("token"));
       } else {
-        initializeScene({ collabAPI }).then((data) => {
+        initializeScene({ collabAPI, link }).then((data) => {
           loadImages(data);
           if (data.scene) {
             excalidrawAPI.updateScene({
@@ -486,7 +493,7 @@ const ExcalidrawWrapper = () => {
       document.removeEventListener(EVENT.VISIBILITY_CHANGE, syncData, false);
       clearTimeout(titleTimeout);
     };
-  }, [collabAPI, excalidrawAPI]);
+  }, [collabAPI, excalidrawAPI, link]);
 
   useEffect(() => {
     const unloadHandler = (event: BeforeUnloadEvent) => {
@@ -745,11 +752,15 @@ const ExcalidrawWrapper = () => {
   );
 };
 
-const ExcalidrawApp = () => {
+type ExcalidrawAppProps = {
+  link?: string;
+};
+
+const ExcalidrawApp = ({ link }: ExcalidrawAppProps) => {
   return (
     <TopErrorBoundary>
       <CollabContextConsumer>
-        <ExcalidrawWrapper />
+        <ExcalidrawWrapper link={link} />
       </CollabContextConsumer>
     </TopErrorBoundary>
   );

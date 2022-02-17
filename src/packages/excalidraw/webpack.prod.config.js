@@ -8,9 +8,13 @@ const { parseEnvVariables } = require("./env");
 
 module.exports = {
   mode: "production",
-  entry: {
-    "excalidraw.production.min": "./entry.js",
-  },
+  entry: process.env.HUBS
+    ? {
+        "excalidraw.hubs.min": "../../excalidraw-app/hubs.tsx",
+      }
+    : {
+        "excalidraw.production.min": "./entry.js",
+      },
   output: {
     path: path.resolve(__dirname, "dist"),
     library: "Excalidraw",
