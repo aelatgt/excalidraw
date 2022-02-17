@@ -189,6 +189,7 @@ class CollabWrapper extends PureComponent<Props, CollabState> {
       window.clearTimeout(this.idleTimeoutId);
       this.idleTimeoutId = null;
     }
+    this.destroySocketClient();
   }
 
   private onUnload = () => {
