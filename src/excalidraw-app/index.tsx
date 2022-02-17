@@ -397,8 +397,7 @@ const ExcalidrawWrapper = ({ link }: ExcalidrawWrapperProps) => {
       loadImages(data, /* isInitialLoad */ true);
       initialStatePromiseRef.current.promise.resolve({
         ...data.scene,
-        appState: { ...data.scene?.appState, scrollX: 0, scrollY: 0 },
-        scrollToContent: false,
+        appState: getDefaultAppState(),
       });
     });
 
