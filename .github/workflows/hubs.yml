@@ -1,4 +1,4 @@
-name: Build and Deploy
+name: Build and Deploy Hubs Module
 on:
   push:
     branches:
@@ -12,6 +12,7 @@ jobs:
 
       - name: Install and Build
         run: |
+          yarn
           cd src/packages/excalidraw
           yarn
           yarn build:hubs
