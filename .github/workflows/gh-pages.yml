@@ -1,4 +1,4 @@
-name: Build and Deploy Hubs Module
+name: Build and Deploy
 on:
   push:
     branches:
@@ -10,14 +10,23 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2.3.1
 
-      - name: Install and Build
+      - name: Install and Build (App)
         run: |
           yarn
-          cd src/packages/excalidraw
+          yarn build
+
+      - name: Install and Build (Hubs)
+        working-directory: ./src/packages/excalidraw
+        run: |
           yarn
           yarn build:hubs
+
+      - name: Copy Hubs Build Artifacts
+        run: |
+          cp -r src/packages/excalidraw/dist/. build/static/js
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.7
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: src/packages/excalidraw/dist # The folder the action should deploy.
+          folder: build # The folder the action should deploy.
