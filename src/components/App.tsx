@@ -316,6 +316,7 @@ class App extends React.Component<AppProps, AppState> {
     super(props);
     const defaultAppState = getDefaultAppState();
     const {
+      app,
       excalidrawRef,
       viewModeEnabled = false,
       zenModeEnabled = false,
@@ -323,6 +324,9 @@ class App extends React.Component<AppProps, AppState> {
       theme = defaultAppState.theme,
       name = defaultAppState.name,
     } = props;
+
+    app.current = this;
+
     this.state = {
       ...defaultAppState,
       theme,

@@ -207,6 +207,7 @@ export type ExcalidrawAPIRefValue =
     };
 
 export interface ExcalidrawProps {
+  app?: any;
   onChange?: (
     elements: readonly ExcalidrawElement[],
     appState: AppState,

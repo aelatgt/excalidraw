@@ -288,9 +288,10 @@ const PlusLinkJSX = (
 
 type ExcalidrawWrapperProps = {
   link?: string;
+  app?: any;
 };
 
-const ExcalidrawWrapper = ({ link }: ExcalidrawWrapperProps) => {
+const ExcalidrawWrapper = ({ link, app }: ExcalidrawWrapperProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   let currentLangCode = languageDetector.detect() || defaultLang.code;
   if (Array.isArray(currentLangCode)) {
@@ -702,6 +703,7 @@ const ExcalidrawWrapper = ({ link }: ExcalidrawWrapperProps) => {
     <>
       <Excalidraw
         ref={excalidrawRefCallback}
+        app={app}
         onChange={onChange}
         initialData={initialStatePromiseRef.current.promise}
         onCollabButtonClick={collabAPI?.onCollabButtonClick}
@@ -757,13 +759,14 @@ const ExcalidrawWrapper = ({ link }: ExcalidrawWrapperProps) => {
 
 type ExcalidrawAppProps = {
   link?: string;
+  app?: any;
 };
 
-const ExcalidrawApp = ({ link }: ExcalidrawAppProps) => {
+const ExcalidrawApp = ({ link, app }: ExcalidrawAppProps) => {
   return (
     <TopErrorBoundary>
       <CollabContextConsumer>
-        <ExcalidrawWrapper link={link} />
+        <ExcalidrawWrapper link={link} app={app} />
       </CollabContextConsumer>
     </TopErrorBoundary>
   );

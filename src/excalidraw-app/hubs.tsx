@@ -2,9 +2,10 @@ import ReactDOM from "react-dom";
 import ExcalidrawApp from ".";
 
 export function mount(domElement: HTMLElement, link?: string) {
-  ReactDOM.render(<ExcalidrawApp link={link} />, domElement);
+  const app = {};
+  ReactDOM.render(<ExcalidrawApp link={link} app={app} />, domElement);
   const unmount = () => {
     ReactDOM.unmountComponentAtNode(domElement);
   };
-  return unmount;
+  return { unmount, app };
 }

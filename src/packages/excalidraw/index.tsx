@@ -13,6 +13,7 @@ import { DEFAULT_UI_OPTIONS } from "../../constants";
 
 const Excalidraw = (props: ExcalidrawProps) => {
   const {
+    app,
     onChange,
     initialData,
     excalidrawRef,
@@ -74,6 +75,7 @@ const Excalidraw = (props: ExcalidrawProps) => {
   return (
     <InitializeApp langCode={langCode}>
       <App
+        app={app}
         onChange={onChange}
         initialData={initialData}
         excalidrawRef={excalidrawRef}
